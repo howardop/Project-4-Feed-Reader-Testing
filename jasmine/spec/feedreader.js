@@ -98,9 +98,9 @@ $(function() {
             loadFeed(0, done);
         });
 
-        it('loadFeed completed', function() {
-            const feed = document.querySelector('.feed');
-            expect(feed.children.length > 0).toBe(true);
+        it('At least 1 entry in feed', function() {
+            const entry = document.querySelector('.entry');
+            expect(entry !== null).toBe(true);
         });
     });
 
@@ -117,11 +117,13 @@ $(function() {
         beforeEach(function (done) {
             loadFeed(0, function () {
                 feed0 = document.querySelector('.feed').innerHTML;
-            });
-
-            loadFeed(1, function () {
-                feed1 = document.querySelector('.feed').innerHTML;
-                done();
+                // Place the 2nd loadFeed inside the callback for the first to guarantee 
+                // that it doesn't execute until the first one compleses
+                // and thus both loadFeeds complete before executing the test below.
+                loadFeed(1, function () {
+                    feed1 = document.querySelector('.feed').innerHTML;
+                    done();
+                });
             });
         });
 
